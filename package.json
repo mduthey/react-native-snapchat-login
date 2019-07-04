@@ -1,0 +1,33 @@
+{
+  "name": "react-native-snapchat-login",
+  "title": "React Native Snapchat Login",
+  "version": "1.0.0",
+  "description": "react-native-snapchat-login",
+  "main": "index",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mduthey/react-native-snapchat-login.git",
+    "baseUrl": "https://github.com/mduthey/react-native-snapchat-login"
+  },
+  "keywords": [
+    "react-native"
+  ],
+  "author": {
+    "name": "Maximliano Duthey",
+    "email": "max@xoor.io"
+  },
+  "license": "Apache-2.0",
+  "licenseFilename": "LICENSE",
+  "readmeFilename": "README.md",
+  "peerDependencies": {
+    "react": "^16.5.0",
+    "react-native": ">=0.57.0-rc.0 <1.0.x"
+  },
+  "devDependencies": {
+    "react": "^16.5.0",
+    "react-native": "^0.59.4"
+  }
+}

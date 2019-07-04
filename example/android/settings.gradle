@@ -1,0 +1,5 @@
+rootProject.name = 'example'
+include ':react-native-snapchat-login'
+project(':react-native-snapchat-login').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-snapchat-login/android')
+
+include ':app'
