@@ -19,7 +19,7 @@
     "name": "Maximliano Duthey",
     "email": "max@xoor.io"
   },
-  "license": "Apache-2.0",
+  "license": "MIT",
   "licenseFilename": "LICENSE",
   "readmeFilename": "README.md",
   "peerDependencies": {
