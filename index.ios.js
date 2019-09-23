@@ -17,6 +17,8 @@ class SnapchatLogin {
           if(resultJson.error) {
             reject(resultJson.error);
           } else { 
+            // Workaround: Duplicated call to getUserInfo is needed because of some bug with Snapkit
+            this.getUserInfo()
             this.getUserInfo()
               .then(resolve)
               .catch(reject);
@@ -48,12 +50,10 @@ class SnapchatLogin {
           } else {
             let counter = 0;
             const tmpListener = this.addListener('AccessToken', (res) => {
-              // This method is called 2 times. 
+              // This method is called more than 1 time. 
               // The first one with null. The second one with the token
-              if (counter == 0) {
-                counter++;
-              } else {
-                data.accessToken = res.accessToken !== 'null' ? res.accessToken : null;
+              if (res.accessToken && res.accessToken !== 'null') {
+                data.accessToken = res.accessToken;
                 tmpListener.remove();
                 resolve(data);
               }
