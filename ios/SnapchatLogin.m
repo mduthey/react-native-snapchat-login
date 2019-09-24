@@ -3,12 +3,12 @@
 
 @implementation SnapchatLogin
 
-RCT_EXPORT_MODULE()
-
-- (NSArray<NSString *> *)supportedEvents
+- (dispatch_queue_t)methodQueue
 {
-    return @[@"AccessToken"];
+  return dispatch_get_main_queue();
 }
+
+RCT_EXPORT_MODULE()
 
 RCT_REMAP_METHOD(login,
                  loginResolver:(RCTPromiseResolveBlock)resolve
@@ -17,13 +17,17 @@ RCT_REMAP_METHOD(login,
     UIViewController *rootViewController = [UIApplication sharedApplication].delegate.window.rootViewController;
     
     [SCSDKLoginClient loginFromViewController:rootViewController
-                                   completion:^(BOOL success, NSError * _Nullable error) {
-                                       if (error) {
-                                           resolve([NSString stringWithFormat:@"{\"result\": false, \"error\": \"%@\"}", error.localizedDescription]);
-                                       } else {
-                                           resolve(@"{\"result\": true}");
-                                       }
-                                   }];
+                                   completion:^(BOOL success, NSError * _Nullable error)
+    {
+        if(error) {
+            resolve(@{
+                @"result": @(NO),
+                @"error": error.localizedDescription
+            });
+        } else {
+            resolve(@{@"result": @(YES)});
+        }
+    }];
 }
 
 RCT_REMAP_METHOD(logout,
@@ -31,7 +35,7 @@ RCT_REMAP_METHOD(logout,
                  rejecter:(RCTPromiseRejectBlock)reject)
 {
     [SCSDKLoginClient unlinkAllSessionsWithCompletion:^(BOOL success) {
-        resolve([NSString stringWithFormat:@"{\"result\": %s}", success ? "true" : "false"]);
+        resolve(@{@"result": @(success)});
     }];
 }
 
@@ -39,7 +43,8 @@ RCT_REMAP_METHOD(isUserLoggedIn,
                  isUserLoggedInResolver:(RCTPromiseResolveBlock)resolve
                  rejecter:(RCTPromiseRejectBlock)reject)
 {
-    resolve([NSString stringWithFormat:@"{\"result\": %s}", [SCSDKLoginClient isUserLoggedIn] ? "true" : "false"]);
+    
+    resolve(@{@"result": @([SCSDKLoginClient isUserLoggedIn])});
 }
 
 RCT_REMAP_METHOD(fetchUserData,
@@ -53,29 +58,41 @@ RCT_REMAP_METHOD(fetchUserData,
         
         [SCSDKLoginClient fetchUserDataWithQuery:graphQLQuery
                                        variables:variables
-                                         success:^(NSDictionary *resources) {
-                                             NSDictionary *data = resources[@"data"];
-                                             NSDictionary *me = data[@"me"];
-                                             NSString *displayName = me[@"displayName"];
-                                             NSDictionary *bitmoji = me[@"bitmoji"];
-                                             NSString *bitmojiAvatarUrl = bitmoji[@"avatar"];
-                                             NSString *externalId = me[@"externalId"];
-                                             resolve([NSString stringWithFormat:@"{\"displayName\": \"%@\", \"externalId\": \"%@\", \"avatar\": \"%@\"}", displayName, externalId, bitmojiAvatarUrl]);
-                                         } failure:^(NSError * error, BOOL isUserLoggedOut) {
-                                             reject(@"error", @"error", error);
-                                         }];
+                                         success:^(NSDictionary *resources)
+        {
+            NSDictionary *data = resources[@"data"];
+            NSDictionary *me = data[@"me"];
+            NSDictionary *bitmoji = me[@"bitmoji"];
+            resolve(@{
+                @"displayName": me[@"displayName"],
+                @"externalId": me[@"externalId"],
+                @"avatar": bitmoji[@"avatar"]
+            });
+            
+        }
+                                         failure:^(NSError * error, BOOL isUserLoggedOut)
+        {
+            reject(@"error", @"error", error);
+        }];
     } else {
-        resolve(@"null");
+        resolve([NSNull null]);
     }
 }
 
-RCT_EXPORT_METHOD(getAccessToken)
+RCT_REMAP_METHOD(getAccessToken,
+                 resolver:(RCTPromiseResolveBlock)resolve
+                 rejecter:(RCTPromiseRejectBlock)reject)
 {
     [SCSDKLoginClient getAccessTokenWithCompletion:^(NSString * _Nullable accessToken, NSError *_Nullable error) {
         if (accessToken) {
-            [self sendEventWithName:@"AccessToken" body:@{@"accessToken": accessToken}];
+            resolve(@{
+                @"accessToken": accessToken
+            });
         } else {
-            [self sendEventWithName:@"AccessToken" body:@{@"accessToken": @"null", @"error": error}];
+            resolve(@{
+                @"accessToken": [NSNull null],
+                @"error": error
+            });
         }
     }];
 }

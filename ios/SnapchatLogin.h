@@ -1,6 +1,5 @@
 #import <React/RCTBridgeModule.h>
-#import <React/RCTEventEmitter.h>
 
-@interface SnapchatLogin : RCTEventEmitter <RCTBridgeModule>
+@interface SnapchatLogin : NSObject <RCTBridgeModule>
 
 @end
