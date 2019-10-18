@@ -63,10 +63,12 @@ RCT_REMAP_METHOD(fetchUserData,
             NSDictionary *data = resources[@"data"];
             NSDictionary *me = data[@"me"];
             NSDictionary *bitmoji = me[@"bitmoji"];
+            NSString *bitmojiAvatarUrl = bitmoji[@"avatar"];
+            if (bitmojiAvatarUrl == (id)[NSNull null] || bitmojiAvatarUrl.length == 0 ) bitmojiAvatarUrl = @"(null)";
             resolve(@{
                 @"displayName": me[@"displayName"],
                 @"externalId": me[@"externalId"],
-                @"avatar": bitmoji[@"avatar"]
+                @"avatar": bitmojiAvatarUrl
             });
             
         }
