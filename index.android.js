@@ -4,12 +4,12 @@ import { resolve } from 'uri-js';
 export const RNSnapchatLogin = NativeModules.SnapchatLogin;
 export const RNSnapchatLoginEmitter = new NativeEventEmitter(RNSnapchatLogin);
 
-class SnapchatLogin {
-  addListener(eventType, listener, context) {
+export default class SnapchatLogin {
+  static addListener(eventType, listener, context) {
     return RNSnapchatLoginEmitter.addListener(eventType, listener, context);
   }
 
-  login() {
+  static login() {
     return new Promise((resolve, reject) => {
       const succeededListener = this.addListener('LoginSucceeded', (res) => {
         succeededListener.remove();
@@ -25,19 +25,19 @@ class SnapchatLogin {
     });
   }
 
-  async isLogged() {
+  static async isLogged() {
     const result = await RNSnapchatLogin.isUserLoggedIn();
     const resultJSON = JSON.parse(result);
     return !!resultJSON.result;
   }
 
-  async logout() {
+  static async logout() {
     const result = await RNSnapchatLogin.logout();
     const resultJSON = JSON.parse(result);
     return !!resultJSON.result;
   }
 
-  getUserInfo() {
+  static getUserInfo() {
     return new Promise((resolve, reject) => {
       RNSnapchatLogin.fetchUserData()
         .then((tmp) => {
@@ -52,5 +52,3 @@ class SnapchatLogin {
     });
   }
 }
-
-export default new SnapchatLogin();

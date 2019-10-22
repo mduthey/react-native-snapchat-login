@@ -3,8 +3,8 @@ import { NativeModules, NativeEventEmitter } from 'react-native';
 export const RNSnapchatLogin = NativeModules.SnapchatLogin;
 export const RNSnapchatLoginEmitter = new NativeEventEmitter(RNSnapchatLogin);
 
-class SnapchatLogin {
-  login() {
+export default class SnapchatLogin {
+  static login() {
     return new Promise((resolve, reject) => {
       RNSnapchatLogin.login()
         .then((result) => {
@@ -20,17 +20,17 @@ class SnapchatLogin {
     });
   }
 
-  async isLogged() {
+  static async isLogged() {
     const { result } = await RNSnapchatLogin.isUserLoggedIn();
     return result;
   }
 
-  async logout() {
+  static async logout() {
     const { result } = await RNSnapchatLogin.logout();
     return result;
   }
 
-  getUserInfo() {
+  static getUserInfo() {
     return new Promise((resolve, reject) => {
       RNSnapchatLogin.fetchUserData()
         .then(async (tmp) => {
@@ -47,5 +47,3 @@ class SnapchatLogin {
     });
   }
 }
-
-export default new SnapchatLogin();
