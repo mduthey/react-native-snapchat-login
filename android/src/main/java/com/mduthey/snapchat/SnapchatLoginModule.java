@@ -1,4 +1,4 @@
-package com.reactlibrary;
+package com.mduthey.snapchat;
 
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
