@@ -43,3 +43,4 @@ buck-out/
 
 ### CocoaPods ###
 Pods/
+.vs/*
