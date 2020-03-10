@@ -1,5 +1,14 @@
 # react-native-snapchat-login
 
+## **NOTE**
+There is a change in the package name from version 1.0.3 to 1.1.0.
+If you will upgrade, first do unlink or change the package manually in your MainApplication.java
+```diff
+- import com.reactlibrary.SnapchatLoginPackage;
++ import com.mduthey.snapchat.SnapchatLoginPackage;
+```
+Thanks [@velhari]( https://github.com/velhari )
+
 ## Getting started
 
 `$ npm install react-native-snapchat-login --save`
